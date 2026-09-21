@@ -1,193 +1,397 @@
-# 🌐 Data Structures: Foundations & Metrics ⚡
+# 💠 Data Structures — Week 1
 
-1. 🔄 System Architecture & Lifecycle
+> **Foundations of Algorithms, ADTs & Complexity**
 
-💠 Intuition (Why)
+---
 
-Writing robust, industrial-grade software requires structured engineering methodology. Random coding leads to unmaintainable tech debt; systematically decoupling specification from implementation allows teams to scale modules independently.
+## 💠 Intuition — Why This Matters
 
-🧪 Formal Logic (How)
+Data structures are not just containers for data. They define **what data means**, **what operations are allowed**, and **how efficiently programs can process it**.
 
-The software creation lifecycle follows a deterministic progression from problem definition to operational verification:
+A reliable program follows a pipeline:
 
-[ Requirements ] ➔ [ Analysis ] ➔ [ Design ] ➔ [ Refinement & Coding ] ➔ [ Verification ]
+```text
+Requirements
+    ↓
+Analysis
+    ↓
+Design
+    ↓
+Refinement & Coding
+    ↓
+Verification
+    ↓
+Program Proving / Testing / Debugging
+```
 
-Requirements Gathering: Define problem domain and functional scope.
+> [!NOTE]
+> Think of the workflow as **intent → model → implementation → evidence**.
 
-Analysis: Deconstruct system architecture using top-down (decomposition) or bottom-up (composition) models.
+### 🔄 Program Construction Pipeline
 
-Design: Abstract entities into data objects and corresponding operational signatures.
+| Stage               | Core Question                               | Output                   |
+| ------------------- | ------------------------------------------- | ------------------------ |
+| Requirements        | What must the system accomplish?            | Problem constraints      |
+| Analysis            | How should the problem be understood?       | Problem model            |
+| Design              | What data + operations are needed?          | Algorithm / ADT design   |
+| Refinement & Coding | How do we implement it?                     | Source code              |
+| Verification        | Does it satisfy the specification?          | Correctness evidence     |
+| Program Proving     | Can correctness be reasoned about formally? | Proof                    |
+| Testing             | Does it work on selected inputs?            | Test evidence            |
+| Debugging           | Why does it fail?                           | Corrected implementation |
 
-Refinement & Coding: Implement low-level code structure.
+> [!IMPORTANT]
+> **Testing finds failures; verification/proving establishes whether the implementation satisfies its specification.**
 
-Verification: Validate system state via Program Proving (mathematical proof of correctness), Testing (execution against test suites), and Debugging (fault isolation).
+---
 
-1. ⚡ Deterministic Execution: Algorithms & ADTs
+## 🧪 Formal Logic — Algorithms
 
-💠 Intuition (Why)
+### Definition
 
-To make computation predictable, an algorithm must guarantee termination and unambiguous state transitions. Abstract Data Types (ADTs) enforce a contract between what operations are available and how they are stored on physical silicon.
+An **algorithm** is a **finite set of instructions that accomplishes a particular task**.
 
-🧪 Formal Logic (How)
+A valid algorithm must satisfy five core criteria:
 
-Algorithm Axioms
+| Criterion        | Meaning                                              |
+| ---------------- | ---------------------------------------------------- |
+| 📥 Input         | Accepts zero or more clearly specified inputs        |
+| 📤 Output        | Produces one or more specified results               |
+| 🔒 Definiteness  | Every instruction is clear and unambiguous           |
+| 🏁 Finiteness    | Terminates after a finite number of steps            |
+| ⚡ Effectiveness | Each instruction is basic enough to actually execute |
 
-An algorithm is a finite set of instructions fulfilling five core properties:
+### Algorithm Mental Model
 
-Axiom
+```text
+Input
+  ↓
+[ Deterministic / Unambiguous Steps ]
+  ↓
+Finite Execution
+  ↓
+Output
+```
 
-Requirement Description
+> [!NOTE]
+> **Finite + definite + effective** separates an executable algorithm from vague problem-solving instructions.
 
-Input 📥
+---
 
-Zero or more quantities externally supplied.
+## 💠 Intuition — Data Types
 
-Output 📤
+A **data type** combines two things:
 
-At least one quantity produced.
+1. A collection of **objects**
+2. A set of **operations** that act on those objects
 
-Definiteness 🔒
+```text
+Data Type
+├── Objects
+└── Operations
+```
 
-Instructions are clear, precise, and unambiguous.
+For example, an integer type contains integer values and operations such as addition, subtraction, comparison, and equality.
+
+---
 
-Finiteness ⏳
+## 🧪 Formal Logic — Abstract Data Types
 
-The execution guarantees termination after finite steps.
+An **Abstract Data Type (ADT)** separates:
 
-Effectiveness 🛠️
+```text
+WHAT
+├── Objects
+└── Operations
+        ↓
+Specification
+        ║
+        ║ abstraction barrier
+        ▼
+HOW
+├── Representation
+└── Implementation
+```
+
+> [!IMPORTANT]
+> **ADT = specification independent of representation and implementation.**
+
+### Specification vs. Implementation
+
+| Specification                   | Implementation           |
+| ------------------------------- | ------------------------ |
+| Defines what an operation means | Defines how it works     |
+| Function name                   | Algorithm / code         |
+| Argument types                  | Data representation      |
+| Result type                     | Memory / machine details |
+| Implementation-independent      | Representation-dependent |
+
+For an operation, the specification should identify:
+
+- 🔹 Function name
+- 🔹 Types of arguments
+- 🔹 Type of result
+
+> [!NOTE]
+> The same ADT can have multiple implementations as long as they obey the same specification.
 
-Instructions are basic enough to be executed in principle using pencil/paper.
+---
 
-Data Type vs. Abstract Data Type (ADT)
+## 🛠️ Applied Example — ADT `Natural_Number`
 
-Data Type: A collection of objects and a defined set of operations acting upon them.
+The lecture's `Natural_Number` ADT models values from:
 
-Abstract Data Type (ADT): A specification framework where operational interface contracts are completely decoupled from physical data memory representations and algorithm implementations.
+```text
+0 → INT_MAX
+```
 
-[!IMPORTANT]
-Specification vs. Implementation: Operation specifications mandate only the Function Name, Argument Types, and Return Type. They are strictly implementation-independent.
+Its operations include:
 
-🛠️ Applied Example (Metal): Natural Number ADT
+| Operation        | Purpose                                    |
+| ---------------- | ------------------------------------------ |
+| `Zero()`         | Return `0`                                 |
+| `Is_Zero(x)`     | Determine whether `x` is zero              |
+| `Add(x, y)`      | Add values with overflow saturation        |
+| `Equal(x, y)`    | Compare equality                           |
+| `Successor(x)`   | Increment unless already `INT_MAX`         |
+| `Subtract(x, y)` | Subtract without producing negative values |
 
-# System Abstract Data Type Specification: Natural Number
+### Metal — Pseudocode
 
-# Encapsulates subrange [0, INT_MAX] with bounds-checked operations
+```text
+Zero() ::= 0
+# Return the smallest Natural_Number.
 
-class NaturalNumber:
-INT_MAX = 2147483647 # Define hardware/system maximum integer limit
+Is_Zero(x) ::= if x == 0
+                 return TRUE
+               else
+                 return FALSE
+# Test whether x represents zero.
 
-    def __init__(self, value=0):
-        # Initialize natural number with bounded zero floor assertion
-        self.value = max(0, min(value, self.INT_MAX))
+Add(x, y) ::= if x + y <= INT_MAX
+                return x + y
+              else
+                return INT_MAX
+# Saturate at INT_MAX instead of overflowing.
 
-    def is_zero(self) -> bool:
-        # Returns True if current value equals 0
-        return self.value == 0
+Equal(x, y) ::= if x == y
+                  return TRUE
+                else
+                  return FALSE
+# Compare two Natural_Number values.
 
-    def add(self, y: 'NaturalNumber') -> 'NaturalNumber':
-        # Safely compute sum bounded by system INT_MAX limit
-        res = self.value + y.value
-        return NaturalNumber(self.INT_MAX if res > self.INT_MAX else res)
+Successor(x) ::= if x == INT_MAX
+                   return x
+                 else
+                   return x + 1
+# Prevent the successor from exceeding INT_MAX.
 
-    def equal(self, y: 'NaturalNumber') -> bool:
-        # Evaluate boolean equivalence between two NaturalNumber instances
-        return self.value == y.value
+Subtract(x, y) ::= if x < y
+                      return 0
+                    else
+                      return x - y
+# Clamp negative results to zero.
+```
 
-    def successor(self) -> 'NaturalNumber':
-        # Increment value safely without exceeding system INT_MAX limit
-        if self.value == self.INT_MAX:
-            return NaturalNumber(self.INT_MAX)
-        return NaturalNumber(self.value + 1)
+**System Impact:** The ADT defines predictable mathematical behavior while hiding the machine-level representation and implementation details.
 
-    def subtract(self, y: 'NaturalNumber') -> 'NaturalNumber':
-        # Compute difference with bottom floor clamped to zero
-        if self.value < y.value:
-            return NaturalNumber(0)
-        return NaturalNumber(self.value - y.value)
+> [!NOTE]
+> `::=` means **"is defined as"**.
 
-System Impact: Decoupling the numeric boundaries inside an ADT class prevents buffer overflow vulnerabilities and unhandled integer wraps across low-level runtime modules.
+---
 
-🏁 Recap (Takeaway)
+## ⚡ Optimization — Measuring Programs
 
-Algorithms require strict finite behavior, while ADTs protect implementation integrity by exposing abstract operational interfaces rather than direct byte allocations.
+A program should be evaluated beyond simply asking whether it runs.
 
-1. 🧪 Performance Metrics & Space Complexity
+Core quality questions:
 
-💠 Intuition (Why)
+```text
+Correctness
+    ↓
+Readability
+    ↓
+Performance
+├── Space Complexity
+└── Time Complexity
+```
 
-Code correctness and readability are runtime prerequisites, but scalability depends on machine-independent resource bounds. Space complexity allows system designers to budget memory footprints prior to deployment.
+### Performance Analysis
 
-🧪 Formal Logic (How)
+**Machine-independent analysis** focuses on how resource requirements grow rather than on one specific computer.
 
-Total memory consumption $S(P)$ for a program $P$ is modeled as a linear combination of constant overhead and dynamic instance inputs:
+| Metric              | Measures            | Core Question                |
+| ------------------- | ------------------- | ---------------------------- |
+| ⏱️ Time complexity  | Computing time      | How much work is required?   |
+| 💾 Space complexity | Storage requirement | How much memory is required? |
 
-S(P) = C + Sp(I)
+> [!IMPORTANT]
+> Complexity analysis is about **resource growth with input characteristics**, not simply measuring elapsed seconds on one machine.
 
-Fixed Space Requirements ($C$): Space independent of input/output characteristics.
+---
 
-💾 Instruction memory space.
+## 🧪 Formal Logic — Space Complexity
+
+The general model is:
 
-🏷️ Primitive scalar variables and fixed-size structures.
+```text
+S(P) = C + SP(I)
+# Total space = fixed space + input-dependent space.
+```
 
-📌 System constants.
+Where:
 
-Variable Space Requirements ($Sp(I)$): Instance-dependent memory consumption dynamic to input instance $I$.
+- `S(P)` = total space required by program `P`
+- `C` = fixed space requirement
+- `SP(I)` = variable space requirement for input instance `I`
 
-📦 Input/output dataset scale and size.
+### Fixed Space — `C`
 
-🥞 Execution call stack allocations (recursion frame states, formal parameter passes, dynamic local variables, return addresses).
+Fixed space does **not depend on the characteristics of the input or output**.
+
+Typical components:
 
-System Memory Allocation Matrix
-
-Memory Component
-
-Category
-
-Instance Dependent ($I$)?
-
-Examples
-
-Instruction Cache
-
-Fixed ($C$)
-
-❌ No
-
-Compiled machine code binaries
-
-Global Constants
-
-Fixed ($C$)
-
-❌ No
-
-Static lookup tables, configuration flags
-
-Recursion Stack
-
-Variable ($Sp(I)$)
-
-💥 Yes
-
-Frame pointers, saved register states
-
-Dynamic Heaps
-
-Variable ($Sp(I)$)
-
-💥 Yes
-
-Variable-length runtime arrays/buffers
-
-🛠️ Applied Example (Metal): Variable Stack Overhead
-
-def compute_factorial_stack(n: int) -> int: # Recursively computes n! while generating O(n) variable stack frame allocations
-if n <= 1:
-return 1 # Base case triggers stack unwinding
-return n * compute_factorial_stack(n - 1) # Retains parameter n and return address in stack
-
-System Impact: Linear recursive allocations increase variable space overhead $Sp(I)$, threatening stack overflow conditions under heavy scale workloads.
-
-🏁 Recap (Takeaway)
-
-Machine-independent analysis relies on separating static byte overhead ($C$) from input-driven memory growth ($Sp(I)$) to prevent resource exhaustion under high load.
+- 🧩 Instruction space
+- 📦 Simple variables
+- 📦 Fixed-size structured variables
+- 🔢 Constants
+
+### Variable Space — `SP(I)`
+
+Variable space **depends on the input instance `I`**.
+
+Typical components:
+
+- 📥 Number of inputs
+- 📐 Size of inputs
+- 🔢 Values of inputs / outputs
+- 🔄 Recursive stack space
+- 📦 Formal parameters
+- 📦 Local variables
+- ↩️ Return addresses
+
+---
+
+## 🛠️ Applied Example — Recursive Space
+
+Consider a recursive function:
+
+```text
+factorial(n):
+    if n <= 1:
+        return 1
+    return n * factorial(n - 1)
+# Each recursive call adds stack-frame space.
+```
+
+For input `n`, the recursion creates approximately `n` active stack frames before returning.
+
+```text
+S(P) = C + SP(I)
+
+C       → fixed program/storage requirements
+SP(I)   → recursive stack grows with n
+```
+
+**System Impact:** Even when an algorithm's data structures remain small, recursion can increase memory usage through the call stack.
+
+---
+
+## 💠 Core Connections — The Big Picture
+
+```text
+Problem
+   ↓
+Requirements
+   ↓
+Analysis
+   ↓
+ADT / Algorithm
+   ↓
+Specification
+   ↓
+Implementation
+   ↓
+Verification + Testing
+   ↓
+Complexity Analysis
+   ↓
+Reliable Program
+```
+
+The conceptual separation is crucial:
+
+```text
+ADT
+│
+├── WHAT
+│   ├── Objects
+│   └── Operations
+│
+└── HOW
+    ├── Representation
+    └── Implementation
+```
+
+---
+
+## 🏁 Recap — Interview Mode
+
+### ⚡ 10-Second Recall
+
+- 💠 **Data type** = objects + operations.
+- 💠 **ADT** = data type whose specification is separated from representation and implementation.
+- 🧪 **Algorithm** = finite instructions accomplishing a task.
+- 🔒 Algorithm criteria = **input, output, definiteness, finiteness, effectiveness**.
+- 🛠️ **Specification** describes what an operation provides.
+- 🛠️ **Implementation** describes how the operation works.
+- ⚡ **Time complexity** measures computing-time growth.
+- ⚡ **Space complexity** measures storage requirements.
+- 💾 `S(P) = C + SP(I)`.
+- 🔄 `C` is input-independent; `SP(I)` depends on the input instance.
+
+### 🧠 Interview Triggers
+
+| Question                         | Answer Pattern                                                 |
+| -------------------------------- | -------------------------------------------------------------- |
+| What is an algorithm?            | Finite instructions that accomplish a task                     |
+| What makes an algorithm valid?   | Input, output, definiteness, finiteness, effectiveness         |
+| What is an ADT?                  | Specification separated from representation and implementation |
+| Why use an ADT?                  | Encapsulation + implementation independence                    |
+| Specification vs implementation? | **What** vs **how**                                            |
+| Time vs space complexity?        | Computing time vs storage requirement                          |
+| Space formula?                   | `S(P) = C + SP(I)`                                             |
+| What is `SP(I)`?                 | Input-dependent space requirement                              |
+
+> [!IMPORTANT]
+> **Master the abstraction boundary:** algorithms describe computation, ADTs describe behavior, implementations realize that behavior, and complexity describes resource cost.
+
+---
+
+## 🏁 Final Mental Model
+
+```text
+          ┌───────────────────────┐
+          │       PROBLEM         │
+          └───────────┬───────────┘
+                      ↓
+          ┌───────────────────────┐
+          │   ALGORITHM / ADT     │
+          │       WHAT + WHY      │
+          └───────────┬───────────┘
+                      ↓
+          ┌───────────────────────┐
+          │   IMPLEMENTATION      │
+          │        HOW            │
+          └───────────┬───────────┘
+                      ↓
+          ┌───────────────────────┐
+          │ VERIFICATION / TEST   │
+          └───────────┬───────────┘
+                      ↓
+          ┌───────────────────────┐
+          │  TIME + SPACE COST    │
+          └───────────────────────┘
+```
+
+> **Foundation Principle:** Good data-structure design separates **behavior from implementation** and evaluates the resulting program by **correctness, clarity, and resource usage**.
